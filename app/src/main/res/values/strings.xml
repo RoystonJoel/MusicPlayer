@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MusicPlayer</string>
+    <string name="clickme">Clickme</string>
+    <string name="permissions">permissions</string>
 </resources>

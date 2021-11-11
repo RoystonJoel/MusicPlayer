@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import java.io.File
 import java.util.*
+import kotlin.system.exitProcess
 
 class TheAdapter(private val data: List<Audio>, private val listener: (Audio) -> Unit) : RecyclerView.Adapter<TheAdapter.TheHolder>() {
 
@@ -39,17 +41,26 @@ class TheAdapter(private val data: List<Audio>, private val listener: (Audio) ->
         private val AlbumCover: ImageView = v.findViewById(R.id.AlbumCover)
         private val _title: TextView = v.findViewById(R.id.Title_view)
         private val _Artist: TextView = v.findViewById(R.id.Artist_view)
-        private val _duration: TextView = v.findViewById(R.id.duration_view)
 
         @RequiresApi(Build.VERSION_CODES.R)
         fun bind(item: Audio) {
 
 
+            val itemBitmap = item.getAlbumCover()
 
-            //Glide.with(parent_temp).load(item.uri).placeholder(R.drawable.ic_baseline_music_note_24).into(AlbumCover)
+            if (!item.Islastrow)
+            {
+                if (itemBitmap == null){
+                    AlbumCover.setImageResource(R.drawable.ic_baseline_music_note_24)
+                }else{
+                    AlbumCover.setImageBitmap(itemBitmap)
+                    AlbumCover.setAdjustViewBounds(true)
+                }
+            }
+
+
             _title.text = item._title
             _Artist.text = item.author
-            _duration.text = item._duration
             v.setOnClickListener { listener(item) }
         }
 

@@ -15,7 +15,9 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -31,13 +33,10 @@ class MainActivity : AppCompatActivity() {
     private var permissions = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE)
     private lateinit var adapter: TheAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    val mediaPlayer = MediaPlayer().apply {
-        AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .build()
-    }
+    private lateinit var sheet: View
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,23 +61,25 @@ class MainActivity : AppCompatActivity() {
         adapter = TheAdapter(data) { showDetail(it) }
         listView.adapter = adapter
 
+        sheet = findViewById<FrameLayout>(R.id.sheet)
+        BottomSheetBehavior.from(sheet).apply {
+            peekHeight=300
+            state=BottomSheetBehavior.STATE_HIDDEN
+        }
+
     }
 
     private fun showDetail(item: Audio) {
-
-        if (mediaPlayer.isPlaying)
+        if (!item.Islastrow)
         {
-            mediaPlayer.stop()
-            mediaPlayer.release()
-        }
-        mediaPlayer.setDataSource(item.uri)
-        mediaPlayer.prepare()
-        mediaPlayer.start()
+            item.play()
+            BottomSheetBehavior.from(sheet).apply {
+                peekHeight=300
+                state=BottomSheetBehavior.STATE_COLLAPSED
+            }
 
-        BottomSheetBehavior.from(findViewById(R.id.sheet)).apply{
-            peekHeight=200
-            state=BottomSheetBehavior.STATE_COLLAPSED
-
+            val artview = findViewById<ImageView>(R.id.art_View)
+            artview.setImageBitmap(item.getAlbumCover())
         }
     }
 
@@ -89,7 +90,6 @@ class MainActivity : AppCompatActivity() {
         val list = mutableListOf<Audio>()
 
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val selection = MediaStore.Audio.Media.IS_MUSIC + "!=0"
         val c = contentResolver.query(uri,null, null,null,null)
         if (c != null)
         {
@@ -103,14 +103,18 @@ class MainActivity : AppCompatActivity() {
 
 
                 Log.i("show",title)
-                Log.i("show",uri.toString())
+                Log.i("show",_uri.toString())
                 Log.i("show",_id.toString())
                 Log.i("show","---------")
 
 
-                list.add(Audio(_uri,_id,title,author,_duration))
+                list.add(Audio(_uri,_id,title,author,_duration,false))
             }
             c.close()
+
+            val dummy = " "
+            val dummy3: Long = 0
+            list.add(Audio(dummy,dummy3,dummy,dummy,dummy,true))
         }
         return list
     }

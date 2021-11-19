@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MybackgroundStyle">
+        <item name="android:background">@color/primaryLightColorDark</item>
+        <!-- This is so that the background color or the frame layout stays constant no matter what theme -->
+    </style>
+</resources>

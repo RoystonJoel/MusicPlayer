@@ -11,19 +11,12 @@ import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import kotlin.IllegalArgumentException
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-val mediaPlayer = MediaPlayer().apply {
-    AudioAttributes.Builder()
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .build()
-}
 
-data class Audio(val uri: String,
-                 val _id: Long,
+
+data class Audio(val _id: Int,
+                 val uri: String,
                  val _title: String,
                  val author: String,
-                 val _duration: String,
                  val Islastrow: Boolean){
 
 
@@ -45,16 +38,8 @@ fun getAlbumCover(): Bitmap? {
     return null
 }
 
-    fun play(){
-        if (mediaPlayer.isPlaying)
-        {
-            mediaPlayer.stop()
-            mediaPlayer.release()
-        }
-        mediaPlayer.setDataSource(uri)
-        mediaPlayer.prepare()
-        mediaPlayer.start()
-    }
+
+
 
 
 
